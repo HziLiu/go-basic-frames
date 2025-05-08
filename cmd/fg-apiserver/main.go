@@ -1,20 +1,24 @@
 package main
 
 import (
-	"flag"
-	"fmt"
+	// 导入 automaxprocs 包，可以在程序启动时自动设置 GOMAXPROCS 配置，
+	// 使其与 Linux 容器的 CPU 配额相匹配。
+	// 这避免了在容器中运行时，因默认 GOMAXPROCS 值不合适导致的性能问题，
+	// 确保 Go 程序能够充分利用可用的 CPU 资源，避免 CPU 浪费。
+	"github.com/go-basic-frames/cmd/fg-apiserver/app"
+	_ "go.uber.org/automaxprocs"
+	"os"
 )
 
 // Go 程序默认入口函数，阅读项目代码的入口
 func main() {
-	// 解析命令行参数
-	option1 := flag.String("option1", "default_value", "Description of option 1")
-	option2 := flag.Int("option2", 0, "Description of option 2")
-	flag.Parse()
+	// 创建项目
+	command := app.NewFastGOCommand()
 
-	// 执行简单的业务逻辑
-	fmt.Println("Option 1 value:", *option1)
-	fmt.Println("Option 2 value:", *option2)
+	// 执行命令并处理错误
+	if err := command.Execute(); err != nil {
+		// 错误则退出程序，且其他程序（bash 脚本）可以根据返回的状态码判断服务运行状态
+		os.Exit(1)
+	}
 
-	// 添加业务逻辑代码
 }
