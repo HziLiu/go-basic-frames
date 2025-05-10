@@ -34,10 +34,11 @@ func NewFastGOCommand() *cobra.Command {
 			if err := opts.Validate(); err != nil {
 				return err
 			}
-			fmt.Printf("Read MySQL host from Viper:%s", viper.GetString("mysql.host"))
-			fmt.Printf("Read MySQL username from opt:%s", opts.MySQLOptions.Username)
+			fmt.Printf("Read MySQL host from Viper:%s\n", viper.GetString("mysql.addr"))
+			fmt.Printf("Read MySQL username from opt:%s\n", opts.MySQLOptions.Username)
 
-			jsonData, _ := json.MarshalIndent(opts, "", "")
+			// Indent 适合调试展示，会缩进两个空格
+			jsonData, _ := json.MarshalIndent(opts, "", "  ")
 			fmt.Println(string(jsonData))
 
 			return nil
@@ -46,7 +47,13 @@ func NewFastGOCommand() *cobra.Command {
 		Args: cobra.NoArgs,
 	}
 
-	// 初始化配置函数，在每个命令运行时调用
-	cobra.OnInitialize()
+	// 初始化配置函数，在每个命令运行时调用，调用钩子函数onInitialize，读取配置
+	cobra.OnInitialize(onInitialize)
+
+	// cobra 支持持久性标志(PersistentFlag)，该标志可用于它所分配的命令以及该命令下的每个子命令
+	// 推荐使用配置文件来配置应用，便于管理配置项
+	cmd.PersistentFlags().StringVarP(&configFile, "config", "c", filePath(),
+		"Path to the fg-apiserver configuration file.")
+
 	return cmd
 }
