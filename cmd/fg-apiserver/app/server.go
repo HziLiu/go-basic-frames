@@ -11,7 +11,7 @@ import (
 )
 
 // var configFile string // 配置文件路径
-var configFile = "/Users/ziliu/GolandProjects/go-basic-frames/configs/fg-apiserver.yaml"
+var configFile string
 
 // NewFastGOCommand 创建一个 *cobra.Command 对象，用于启动应用程序.
 func NewFastGOCommand() *cobra.Command {
@@ -124,9 +124,6 @@ func initLog() {
 	}
 
 	// 转换日志格式
-	if err != nil {
-		return
-	}
 	var handler slog.Handler
 	switch format {
 	case "json":

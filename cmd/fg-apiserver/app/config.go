@@ -6,11 +6,12 @@ import (
 	"github.com/spf13/viper"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
 	// defaultHomeDir 定义放置 fastgo 服务配置的默认目录.
-	defaultHomeDir = ".fastgo"
+	defaultHomeDir = "GolandProjects/go-basic-frames/configs"
 
 	// defaultConfigName 指定 fastgo 服务的默认配置文件名.
 	defaultConfigName = "fg-apiserver.yaml"
@@ -20,7 +21,7 @@ const (
 func onInitialize() {
 	if configFile != "" {
 		// 从命令行选项指定的配置文件中读取
-		viper.SetConfigFile("/Users/ziliu/GolandProjects/go-basic-frames/configs/fg-apiserver.yaml")
+		viper.SetConfigFile(configFile)
 	} else {
 		// 使用默认配置文件路径和名称
 		for _, dir := range searchDirs() {
@@ -50,10 +51,10 @@ func setupEnvironmentVariables() {
 	// 允许 viper 自动匹配环境变量
 	viper.AutomaticEnv()
 	// 设置环境变量前缀
-	//viper.SetEnvPrefix("FASTGO")
-	// 替换环境变量 key 中的分隔符 '.' 和 '-' 为 '_'
-	//replacer := strings.NewReplacer(".", "_", "-", "_")
-	//viper.SetEnvKeyReplacer(replacer)
+	viper.SetEnvPrefix("FASTGO")
+	//替换环境变量 key 中的分隔符 '.' 和 '-' 为 '_'
+	replacer := strings.NewReplacer(".", "_", "-", "_")
+	viper.SetEnvKeyReplacer(replacer)
 }
 
 // searchDirs 返回默认的配置文件搜索目录.
