@@ -3,6 +3,7 @@ package apiserver
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	mw "github.com/go-basic-frames/internal/pkg/middleware"
 	"github.com/go-basic-frames/pkg/options"
 	"log/slog"
 	"net/http"
@@ -25,6 +26,10 @@ type Server struct {
 func (cfg *Config) NewServer() (*Server, error) {
 	// 创建 Gin 引擎
 	engine := gin.New()
+
+	// gin.Recovery() 中间件，用来捕获任何 panic，并恢复
+	mws := []gin.HandlerFunc{gin.Recovery(), mw.NoCache, mw.Cors, mw.RequestID()}
+	engine.Use(mws...)
 
 	// 注册 404 handler
 	engine.NoRoute(func(c *gin.Context) {
