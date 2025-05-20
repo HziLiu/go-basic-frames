@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/go-basic-frames/internal/pkg/core"
+	"github.com/go-basic-frames/internal/pkg/errorsx"
 	mw "github.com/go-basic-frames/internal/pkg/middleware"
 	"github.com/go-basic-frames/pkg/options"
 	"log/slog"
@@ -38,12 +40,12 @@ func (cfg *Config) NewServer() (*Server, error) {
 
 	// 注册 404 handler
 	engine.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, gin.H{"code": "PageNotFound", "message": "Page not found."})
+		core.WriteResponse(c, errorsx.ErrNotFound.WithMessage("Page not found"), nil)
 	})
 
 	// 注册 /healthz handler.
 	engine.GET("/healthz", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+		core.WriteResponse(c, map[string]string{"status": "ok"}, nil)
 	})
 
 	// 创建 HTTP Server 实例
