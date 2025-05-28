@@ -3,7 +3,7 @@ mysql:
   # MySQL 机器 IP 和端口，默认 127.0.0.1:3306
   addr: 124.71.74.248:3306
   # MySQL 用户名(建议授权最小权限集)
-  username: fastgo
+  username: root
   # MySQL 用户密码
   password: 1q2w3e4rQAZ1
   # fastgo 系统所用的数据库名
